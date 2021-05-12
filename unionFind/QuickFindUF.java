@@ -1,3 +1,5 @@
+package unionFind;
+
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -14,7 +16,7 @@ import edu.princeton.cs.algs4.StdOut;
  ******************************************************************************/
 
 public class QuickFindUF {
-    private int[] id; // id[i] = component identifier of i
+    private final int[] id; // id[i] = component identifier of i
     private int count; // number of components
 
     public QuickFindUF(int n) {
