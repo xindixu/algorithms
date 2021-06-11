@@ -1,5 +1,3 @@
-package unionFind;
-
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -10,7 +8,7 @@ import edu.princeton.cs.algs4.StdOut;
  *  Data files:   https://algs4.cs.princeton.edu/15uf/tinyUF.txt
  *                https://algs4.cs.princeton.edu/15uf/mediumUF.txt
  *                https://algs4.cs.princeton.edu/15uf/largeUF.txt
- *
+ *ß
  *  Quick-find algorithm.
  *
  ******************************************************************************/
