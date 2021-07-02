@@ -3,7 +3,9 @@ package stack;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
-public class FixedCapacityStackOfStrings {
+import java.util.Iterator;
+
+public class FixedCapacityStackOfStrings implements Iterable<String> {
 
     private final String[] array;
     private int count;
@@ -25,11 +27,33 @@ public class FixedCapacityStackOfStrings {
         return array[--count];
     }
 
+    public Iterator<String> iterator() {
+        return new ReverseArrayIterator();
+    }
+
+    public class ReverseArrayIterator implements Iterator<String> {
+        private int current = count - 1;
+
+        public boolean hasNext() {
+            return current >= 0;
+        }
+
+        public String next() {
+            return array[current--];
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
     public static void main(String[] args) {
         int max = Integer.parseInt(args[0]);
         FixedCapacityStackOfStrings stack = new FixedCapacityStackOfStrings(max);
         StdOut.println(max);
 
+        // Hint: use command + D to send EOF in the command line
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
             if (!item.equals("-")) stack.push(item);
@@ -39,10 +63,10 @@ public class FixedCapacityStackOfStrings {
         StdOut.println();
 
         // print what's left on the stack
-//        StdOut.print("Left on stack: ");
-//        for (String s : stack) {
-//            StdOut.print(s + " ");
-//        }
-//        StdOut.println();
+        StdOut.println("Left on stack: ");
+        for (String s : stack) {
+            StdOut.print(s + " ");
+        }
+        StdOut.println();
     }
 }
