@@ -39,7 +39,9 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
 
     private void resize(int capacity) {
         Item[] copy = (Item[]) new Object[capacity];
-        System.arraycopy(array, first, copy, 0, count);
+        for (int i = 0; i < count; i++) {
+            copy[i] = array[(first + i) % array.length];
+        }
         array = copy;
         first = 0;
         last = count;
