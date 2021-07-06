@@ -5,6 +5,23 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
 
+/******************************************************************************
+ *  Compilation:  javac FixedCapacityStack.java
+ *  Execution:    java FixedCapacityStack
+ *  Dependencies: StdIn.java StdOut.java
+ *
+ *  Generic stack implementation with a fixed-size array.
+ *
+ *  % more tobe.txt
+ *  to be or not to - be - - that - - - is
+ *
+ *  % java FixedCapacityStack 5 < tobe.txt
+ *  to be not that or be
+ *
+ *  Remark:  bare-bones implementation. Does not do repeated
+ *  doubling or null out empty array entries to avoid loitering.
+ *
+ ******************************************************************************/
 public class FixedCapacityStack<Item> implements Iterable<Item> {
 
     private final Item[] array;
@@ -21,13 +38,16 @@ public class FixedCapacityStack<Item> implements Iterable<Item> {
     }
 
     public void push(Item item) {
+        // assign first then increment
         array[count++] = item;
     }
 
     public Item pop() {
+        // decrement first then access element
         return array[--count];
     }
 
+    @Override
     public Iterator<Item> iterator() {
         return new ReverseArrayIterator();
     }
@@ -35,14 +55,17 @@ public class FixedCapacityStack<Item> implements Iterable<Item> {
     public class ReverseArrayIterator implements Iterator<Item> {
         private int current = count - 1;
 
+        @Override
         public boolean hasNext() {
             return current >= 0;
         }
 
+        @Override
         public Item next() {
             return array[current--];
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

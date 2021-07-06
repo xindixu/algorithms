@@ -6,6 +6,21 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/******************************************************************************
+ *  Compilation:  javac ResizingArrayStack.java
+ *  Execution:    java ResizingArrayStack < input.txt
+ *  Dependencies: StdIn.java StdOut.java
+ *  Data files:   https://algs4.cs.princeton.edu/13stacks/tobe.txt
+ *
+ *  Stack implementation with a resizing array.
+ *
+ *  % more tobe.txt
+ *  to be or not to - be - - that - - - is
+ *
+ *  % java ResizingArrayStack < tobe.txt
+ *  to be not that or be (2 left on stack)
+ *
+ ******************************************************************************/
 public class ResizingArrayStack<Item> implements Iterable<Item> {
 
     private static final int INIT_CAPACITY = 8;

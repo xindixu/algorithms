@@ -5,6 +5,23 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
 
+/******************************************************************************
+ *  Compilation:  javac FixedCapacityStackOfStrings.java
+ *  Execution:    java FixedCapacityStackOfStrings
+ *  Dependencies: StdIn.java StdOut.java
+ *
+ *  Stack of strings implementation with a fixed-size array.
+ *
+ *  % more tobe.txt
+ *  to be or not to - be - - that - - - is
+ *
+ *  % java FixedCapacityStackOfStrings 5 < tobe.txt
+ *  to be not that or be
+ *
+ *  Remark:  bare-bones implementation. Does not do repeated
+ *  doubling or null out empty array entries to avoid loitering.
+ *
+ ******************************************************************************/
 public class FixedCapacityStackOfStrings implements Iterable<String> {
 
     private final String[] array;
@@ -27,6 +44,7 @@ public class FixedCapacityStackOfStrings implements Iterable<String> {
         return array[--count];
     }
 
+    @Override
     public Iterator<String> iterator() {
         return new ReverseArrayIterator();
     }
@@ -34,14 +52,17 @@ public class FixedCapacityStackOfStrings implements Iterable<String> {
     public class ReverseArrayIterator implements Iterator<String> {
         private int current = count - 1;
 
+        @Override
         public boolean hasNext() {
             return current >= 0;
         }
 
+        @Override
         public String next() {
             return array[current--];
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
