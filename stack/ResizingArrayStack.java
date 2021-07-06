@@ -3,9 +3,10 @@ package stack;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ResizingArrayStack<Item> {
+public class ResizingArrayStack<Item> implements Iterable<Item> {
 
     private static final int INIT_CAPACITY = 8;
     private Item[] array;
@@ -53,6 +54,37 @@ public class ResizingArrayStack<Item> {
         return item;
     }
 
+    @Override
+    public Iterator<Item> iterator() {
+        return new ReverseArrayIterator();
+    }
+
+    public class ReverseArrayIterator implements Iterator<Item> {
+        private int current;
+
+        public ReverseArrayIterator() {
+            current = count - 1;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current >= 0;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Item next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return array[current--];
+        }
+    }
+
     public static void main(String[] args) {
 
         ResizingArrayStack<String> stack = new ResizingArrayStack<>();
@@ -61,6 +93,14 @@ public class ResizingArrayStack<Item> {
             if (!item.equals("-")) stack.push(item);
             else if (!stack.isEmpty()) StdOut.print(stack.pop() + " ");
         }
+
         StdOut.println("(" + stack.size() + " left on stack)");
+
+        // print what's left on the stack
+        StdOut.println("Left on stack: ");
+        for (String s : stack) {
+            StdOut.print(s + " ");
+        }
+        StdOut.println();
     }
 }
