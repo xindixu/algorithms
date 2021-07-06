@@ -58,7 +58,7 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
         if (isEmpty()) {
             throw new NoSuchElementException("Stack underflow");
         }
-        count -= 1;
+        count--;
         Item item = array[count];
         // avoid loitering
         array[count] = null;
