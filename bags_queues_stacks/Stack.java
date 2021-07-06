@@ -1,4 +1,4 @@
-package bag_queues_stacks;
+package bags_queues_stacks;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
@@ -6,26 +6,19 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/******************************************************************************
- *  Compilation:  javac Stack.java
- *  Execution:    java Stack < input.txt
- *  Dependencies: StdIn.java StdOut.java
- *  Data files:   https://algs4.cs.princeton.edu/13stacks/tobe.txt
+/**
+ * Compilation:  javac Stack.java
+ * Execution:    java Stack < input.txt
+ * Dependencies: StdIn.java StdOut.java
+ * Data files:   https://algs4.cs.princeton.edu/13stacks/tobe.txt
  *
- *  A generic stack, implemented using a singly linked list.
- *  Each stack element is of type Item.
+ * A generic stack, implemented using a singly linked list.
+ * Each stack element is of type Item.
  *
- *  This version uses a static nested class Node (to save 8 bytes per
- *  Node), whereas the version in the textbook uses a non-static nested
- *  class (for simplicity).
- *
- *  % more tobe.txt
- *  to be or not to - be - - that - - - is
- *
- *  % java Stack < tobe.txt
- *  to be not that or be (2 left on stack)
- *
- ******************************************************************************/
+ * This version uses a static nested class Node (to save 8 bytes per
+ * Node), whereas the version in the textbook uses a non-static nested
+ * class (for simplicity).
+ */
 public class Stack<Item> implements Iterable<Item> {
     private Node<Item> first;
     private int count;
@@ -100,10 +93,8 @@ public class Stack<Item> implements Iterable<Item> {
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
             StdOut.println(item);
-            if (!item.equals("-"))
-                stack.push(item);
-            else if (!stack.isEmpty())
-                StdOut.print(stack.pop() + " ");
+            if (!item.equals("-")) stack.push(item);
+            else if (!stack.isEmpty()) StdOut.print(stack.pop() + " ");
         }
         StdOut.println("(" + stack.size() + " left on stack)");
 

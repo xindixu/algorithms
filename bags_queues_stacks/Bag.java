@@ -1,38 +1,17 @@
-package bag_queues_stacks;
+package bags_queues_stacks;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
 
-/******************************************************************************
- *  Compilation:  javac Bag.java
- *  Execution:    java Bag < input.txt
- *  Dependencies: StdIn.java StdOut.java
+/**
+ * Compilation:  javac Bag.java
+ * Execution:    java Bag < input.txt
+ * Dependencies: StdIn.java StdOut.java
  *
- *  A generic bag or multiset, implemented using a singly linked list.
- *
- *  % more tobe.txt
- *  to be or not to - be - - that - - - is
- *
- *  % java Bag < tobe.txt
- *  size of bag = 14
- *  is
- *  -
- *  -
- *  -
- *  that
- *  -
- *  -
- *  be
- *  -
- *  to
- *  not
- *  or
- *  be
- *  to
- *
- ******************************************************************************/
+ * A generic bag or multiset, implemented using a singly linked list.
+ */
 public class Bag<Item> implements Iterable<Item> {
 
     private static class Node<Item> {
@@ -91,7 +70,7 @@ public class Bag<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        Bag<Double> numbers = new Bag<Double>();
+        Bag<Double> numbers = new Bag<>();
         while (!StdIn.isEmpty()) numbers.add(StdIn.readDouble());
         int N = numbers.size();
         StdOut.println(N);

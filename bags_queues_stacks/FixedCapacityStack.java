@@ -1,27 +1,19 @@
-package bag_queues_stacks;
+package bags_queues_stacks;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
 
-/******************************************************************************
- *  Compilation:  javac FixedCapacityStack.java
- *  Execution:    java FixedCapacityStack
- *  Dependencies: StdIn.java StdOut.java
+/**
+ * Compilation:  javac FixedCapacityStack.java
+ * Execution:    java FixedCapacityStack
+ * Dependencies: StdIn.java StdOut.java
  *
- *  Generic stack implementation with a fixed-size array.
- *
- *  % more tobe.txt
- *  to be or not to - be - - that - - - is
- *
- *  % java FixedCapacityStack 5 < tobe.txt
- *  to be not that or be
- *
- *  Remark:  bare-bones implementation. Does not do repeated
- *  doubling or null out empty array entries to avoid loitering.
- *
- ******************************************************************************/
+ * Generic stack implementation with a fixed-size array.
+ * Remark:  bare-bones implementation. Does not do repeated
+ * doubling or null out empty array entries to avoid loitering.
+ */
 public class FixedCapacityStack<Item> implements Iterable<Item> {
 
     private final Item[] array;

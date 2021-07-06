@@ -1,4 +1,4 @@
-package bag_queues_stacks;
+package bags_queues_stacks;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
@@ -6,6 +6,14 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Compilation:  javac ResizingArrayQueue.java
+ * Execution:    java ResizingArrayQueue < input.txt
+ * Dependencies: StdIn.java StdOut.java
+ * Data files:   https://algs4.cs.princeton.edu/13stacks/tobe.txt
+ *
+ * Queue implementation with a resizing array.
+ */
 public class ResizingArrayQueue<Item> implements Iterable<Item> {
 
     private static final int INIT_CAPACITY = 8;
@@ -102,7 +110,7 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        ResizingArrayQueue<String> queue = new ResizingArrayQueue<String>();
+        ResizingArrayQueue<String> queue = new ResizingArrayQueue<>();
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
             if (!item.equals("-")) queue.enqueue(item);

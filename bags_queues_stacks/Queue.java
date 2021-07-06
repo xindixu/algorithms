@@ -1,4 +1,4 @@
-package bag_queues_stacks;
+package bags_queues_stacks;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
@@ -6,6 +6,14 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * Compilation:  javac Queue.java
+ * Execution:    java Queue < input.txt
+ * Dependencies: StdIn.java StdOut.java
+ * Data files:   https://algs4.cs.princeton.edu/13stacks/tobe.txt
+ *
+ * A generic queue, implemented using a linked list.
+ */
 public class Queue<Item> implements Iterable<Item> {
     private Node<Item> first;
     private Node<Item> last;
@@ -88,10 +96,8 @@ public class Queue<Item> implements Iterable<Item> {
         Queue<String> queue = new Queue<>();
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
-            if (!item.equals("-"))
-                queue.enqueue(item);
-            else if (!queue.isEmpty())
-                StdOut.print(queue.dequeue() + " ");
+            if (!item.equals("-")) queue.enqueue(item);
+            else if (!queue.isEmpty()) StdOut.print(queue.dequeue() + " ");
         }
         StdOut.println("(" + queue.size() + " left on queue)");
 
