@@ -87,11 +87,6 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
         }
 
         @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public Item next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();

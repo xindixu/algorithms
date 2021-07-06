@@ -61,12 +61,6 @@ public class FixedCapacityStackOfStrings implements Iterable<String> {
         public String next() {
             return array[current--];
         }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
     public static void main(String[] args) {

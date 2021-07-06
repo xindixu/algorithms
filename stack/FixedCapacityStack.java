@@ -64,12 +64,6 @@ public class FixedCapacityStack<Item> implements Iterable<Item> {
         public Item next() {
             return array[current--];
         }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
     public static void main(String[] args) {
