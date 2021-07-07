@@ -51,6 +51,9 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void pushLeft(Item item) {
+        if (item == null) {
+            throw new IllegalArgumentException();
+        }
         Node<Item> oldLeftEnd = leftEnd;
         leftEnd = new Node<>(item, null, oldLeftEnd);
         if (isEmpty()) {
@@ -62,6 +65,9 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void pushRight(Item item) {
+        if (item == null) {
+            throw new IllegalArgumentException();
+        }
         Node<Item> oldRightEnd = rightEnd;
         rightEnd = new Node<>(item, oldRightEnd, null);
         if (isEmpty()) {
@@ -129,6 +135,9 @@ public class Deque<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
             Item item = current.item;
             current = current.right;
             return item;
