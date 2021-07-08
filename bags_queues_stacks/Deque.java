@@ -20,25 +20,25 @@ import java.util.NoSuchElementException;
  */
 public class Deque<Item> implements Iterable<Item> {
 
-    private Node<Item> leftEnd;
-    private Node<Item> rightEnd;
+    private Node<Item> first;
+    private Node<Item> last;
     private int count;
 
     private static class Node<Item> {
         Item item;
-        Node<Item> left;
-        Node<Item> right;
+        Node<Item> prev;
+        Node<Item> next;
 
-        public Node(Item item, Node<Item> left, Node<Item> right) {
+        public Node(Item item, Node<Item> prev, Node<Item> next) {
             this.item = item;
-            this.left = left;
-            this.right = right;
+            this.prev = prev;
+            this.next = next;
         }
     }
 
     public Deque() {
-        leftEnd = null;
-        rightEnd = null;
+        first = null;
+        last = null;
         count = 0;
     }
 
@@ -50,68 +50,68 @@ public class Deque<Item> implements Iterable<Item> {
         return count;
     }
 
-    public void pushLeft(Item item) {
+    public void addFirst(Item item) {
         if (item == null) {
             throw new IllegalArgumentException();
         }
-        Node<Item> oldLeftEnd = leftEnd;
-        leftEnd = new Node<>(item, null, oldLeftEnd);
+        Node<Item> oldFirst = first;
+        first = new Node<>(item, null, oldFirst);
         if (isEmpty()) {
-            rightEnd = leftEnd;
+            last = first;
         } else {
-            oldLeftEnd.left = leftEnd;
+            oldFirst.prev = first;
         }
         count++;
     }
 
-    public void pushRight(Item item) {
+    public void addLast(Item item) {
         if (item == null) {
             throw new IllegalArgumentException();
         }
-        Node<Item> oldRightEnd = rightEnd;
-        rightEnd = new Node<>(item, oldRightEnd, null);
+        Node<Item> oldLast = last;
+        last = new Node<>(item, oldLast, null);
         if (isEmpty()) {
-            leftEnd = rightEnd;
+            first = last;
         } else {
-            oldRightEnd.right = rightEnd;
+            oldLast.next = last;
         }
         count++;
     }
 
-    public Item popLeft() {
+    public Item removeFirst() {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        Item item = leftEnd.item;
-        Node<Item> rightOfLeftEnd = leftEnd.right;
+        Item item = first.item;
+        Node<Item> nextOfFirst = first.next;
         // avoid loitering
-        leftEnd.right = null;
-        if (rightOfLeftEnd != null) {
-            rightOfLeftEnd.left = null;
+        first.next = null;
+        if (nextOfFirst != null) {
+            nextOfFirst.prev = null;
         }
-        leftEnd = rightOfLeftEnd;
+        first = nextOfFirst;
         count--;
         if (isEmpty()) {
-            rightEnd = null;
+            last = null;
         }
         return item;
     }
 
-    public Item popRight() {
+    public Item removeLast() {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        Item item = rightEnd.item;
-        Node<Item> leftOfRightEnd = rightEnd.left;
+        Item item = last.item;
+        Node<Item> prevOfLast = last.prev;
         // avoid loitering
-        rightEnd.left = null;
-        if (leftOfRightEnd != null) {
-            leftOfRightEnd.right = null;
+        last.prev = null;
+        if (prevOfLast != null) {
+            prevOfLast.next = null;
         }
-        rightEnd = leftOfRightEnd;
+        last = prevOfLast;
         count--;
         if (isEmpty()) {
-            leftEnd = null;
+            first = null;
         }
         return item;
     }
@@ -125,7 +125,7 @@ public class Deque<Item> implements Iterable<Item> {
         private Node<Item> current;
 
         public LinkedListIterator() {
-            current = leftEnd;
+            current = first;
         }
 
         @Override
@@ -139,7 +139,7 @@ public class Deque<Item> implements Iterable<Item> {
                 throw new NoSuchElementException();
             }
             Item item = current.item;
-            current = current.right;
+            current = current.next;
             return item;
         }
     }
@@ -151,16 +151,16 @@ public class Deque<Item> implements Iterable<Item> {
             String item = StdIn.readString();
             if (!item.equals("-")) {
                 if (count % 2 == 0) {
-                    deque.pushLeft(item);
+                    deque.addFirst(item);
                 } else {
-                    deque.pushRight(item);
+                    deque.addLast(item);
                 }
                 count++;
             } else if (!deque.isEmpty()) {
                 if (count % 2 == 0) {
-                    StdOut.print(deque.popLeft() + " ");
+                    StdOut.print(deque.removeFirst() + " ");
                 } else {
-                    StdOut.print(deque.popRight() + " ");
+                    StdOut.print(deque.removeLast() + " ");
                 }
                 count++;
             }
