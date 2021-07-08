@@ -67,7 +67,7 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
         return new ReverseArrayIterator();
     }
 
-    public class ReverseArrayIterator implements Iterator<Item> {
+    private class ReverseArrayIterator implements Iterator<Item> {
         private int current;
 
         public ReverseArrayIterator() {

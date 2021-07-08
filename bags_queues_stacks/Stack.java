@@ -64,7 +64,7 @@ public class Stack<Item> implements Iterable<Item> {
         return new LinkedListIterator();
     }
 
-    public class LinkedListIterator implements Iterator<Item> {
+    private class LinkedListIterator implements Iterator<Item> {
         private Node<Item> current;
 
         public LinkedListIterator() {

@@ -41,7 +41,7 @@ public class FixedCapacityStackOfStrings implements Iterable<String> {
         return new ReverseArrayIterator();
     }
 
-    public class ReverseArrayIterator implements Iterator<String> {
+    private class ReverseArrayIterator implements Iterator<String> {
         private int current = count - 1;
 
         @Override

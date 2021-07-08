@@ -81,7 +81,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return new RandomLinkedListIterator();
     }
 
-    public class RandomLinkedListIterator implements Iterator<Item> {
+    private class RandomLinkedListIterator implements Iterator<Item> {
 
         private List<Item> randomizedArrayList;
         private int current;

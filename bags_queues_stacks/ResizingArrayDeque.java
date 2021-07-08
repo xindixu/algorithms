@@ -142,7 +142,7 @@ public class ResizingArrayDeque<Item> implements Iterable<Item> {
         return new ArrayIterator();
     }
 
-    public class ArrayIterator implements Iterator<Item> {
+    private class ArrayIterator implements Iterator<Item> {
         private int current;
 
         public ArrayIterator() {
