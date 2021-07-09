@@ -5,7 +5,6 @@ import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.awt.*;
-import java.util.Comparator;
 
 @SuppressWarnings("rawtypes")
 public class TraceInsertion {
@@ -39,28 +38,6 @@ public class TraceInsertion {
         assert isSorted(array);
     }
 
-    /**
-     * Rearranges the array in ascending order, using a comparator.
-     *
-     * @param array      the array
-     * @param comparator the comparator specifying the order
-     */
-    public static void sort(Comparable[] array, Comparator comparator) {
-        int n = array.length;
-        for (int i = 0; i < n; i++) {
-            for (int j = i; j > 0; j--) {
-                // exchange array[i] with each larger entry on the left
-                if (less(comparator, array[j], array[j - 1])) {
-                    exch(array, j, j - 1);
-                } else {
-                    break;
-                }
-            }
-            assert isSorted(array, comparator, 0, i);
-        }
-        assert isSorted(array, comparator);
-    }
-
     /***************************************************************************
      *  Helper sorting functions.
      ***************************************************************************/
@@ -69,12 +46,6 @@ public class TraceInsertion {
     private static boolean less(Comparable v, Comparable w) {
         return v.compareTo(w) < 0;
     }
-
-    // is v < w ?
-    private static boolean less(Comparator comparator, Object v, Object w) {
-        return comparator.compare(v, w) < 0;
-    }
-
 
     // exchange a[i] and a[j]
     private static void exch(Object[] a, int i, int j) {
@@ -96,18 +67,6 @@ public class TraceInsertion {
     private static boolean isSorted(Comparable[] a, int lo, int hi) {
         for (int i = lo + 1; i <= hi; i++)
             if (less(a[i], a[i - 1])) return false;
-        return true;
-    }
-
-    // is the array a[] sorted?
-    private static boolean isSorted(Object[] a, Comparator comparator) {
-        return isSorted(a, comparator, 0, a.length - 1);
-    }
-
-    // is the array sorted from a[lo] to a[hi]
-    private static boolean isSorted(Object[] a, Comparator comparator, int lo, int hi) {
-        for (int i = lo + 1; i <= hi; i++)
-            if (less(comparator, a[i], a[i - 1])) return false;
         return true;
     }
 
