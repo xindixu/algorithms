@@ -27,7 +27,7 @@ public class Shell {
      * @param n     length of the array
      */
     private static void hSort(Comparable[] array, int h, int n) {
-        for (int i = 0; i < n; i += h) {
+        for (int i = h; i < n; i += h) {
             // exchange array[i] with each larger entry on the left
             for (int j = i; j >= h; j -= h) {
                 if (less(array[j], array[j - h])) {
@@ -48,7 +48,7 @@ public class Shell {
      * @param n          length of the array
      */
     private static void hSort(Comparable[] array, Comparator comparator, int h, int n) {
-        for (int i = 0; i < n; i += h) {
+        for (int i = h; i < n; i += h) {
             // exchange array[i] with each larger entry on the left
             for (int j = i; j >= h; j -= h) {
                 if (less(comparator, array[j], array[j - h])) {
@@ -145,7 +145,7 @@ public class Shell {
     // print array to standard output
     private static void show(Comparable[] a) {
         for (Comparable objectComparable : a) {
-            StdOut.println(objectComparable);
+            StdOut.print(objectComparable + " ");
         }
     }
 
