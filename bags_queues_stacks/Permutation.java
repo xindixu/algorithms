@@ -5,11 +5,9 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
 
-import static java.lang.Integer.parseInt;
-
 public class Permutation {
     public static void main(String[] args) {
-        int k = parseInt(args[0]);
+        int k = Integer.parseInt(args[0]);
 
         RandomizedQueue<String> randomizedQueue = new RandomizedQueue<>();
 

@@ -2,8 +2,10 @@ package bags_queues_stacks;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
@@ -67,7 +69,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        int randomIndex = new Random().nextInt(count);
+        int randomIndex = StdRandom.uniform(count);
         Node<Item> current = first;
         for (int i = 0; i < randomIndex; i++) {
             current = current.next;
@@ -83,7 +85,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class RandomLinkedListIterator implements Iterator<Item> {
 
-        private List<Item> randomizedArrayList;
+        private Item[] randomizedArray;
         private int current;
 
         public RandomLinkedListIterator() {
@@ -101,20 +103,25 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            return randomizedArrayList.get(current++);
+            return randomizedArray[current++];
         }
 
         private void generateRandomizedArray() {
-            // create an array list from linked list
-            randomizedArrayList = new ArrayList<>();
+            // create an array from the linked list
+            randomizedArray = (Item[]) new Object[count];
             Node<Item> currentNode = first;
             for (int i = 0; i < count; i++) {
-                randomizedArrayList.add(currentNode.item);
+                randomizedArray[i] = currentNode.item;
                 currentNode = currentNode.next;
             }
 
             // shuffle the array list -> randomize
-            Collections.shuffle(randomizedArrayList);
+            for (int i = 0; i < count; i++) {
+                int j = StdRandom.uniform(count);
+                Item temp = randomizedArray[i];
+                randomizedArray[i] = randomizedArray[j];
+                randomizedArray[j] = temp;
+            }
         }
     }
 
