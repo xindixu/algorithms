@@ -13,11 +13,13 @@ public class BruteCollinearPoints {
         if (points == null) {
             throw new IllegalArgumentException();
         }
+        assert points.length == 4;
         for (Point p : points) {
             if (p == null) {
                 throw new IllegalArgumentException();
             }
         }
+        Arrays.sort(points);
         if (hasDuplicatedPoints(points)) {
             throw new IllegalArgumentException();
         }
@@ -29,16 +31,10 @@ public class BruteCollinearPoints {
     }
 
     private int getMaxNumOfLineSegments(Point[] points) {
-        int n = points.length;
-        int total = 0;
-        for (int i = n - 1; i > 0; i--) {
-            total += i;
-        }
-        return total;
+        return points.length;
     }
 
     private boolean hasDuplicatedPoints(Point[] points) {
-        Arrays.sort(points);
         for (int i = 0; i < points.length - 1; i++) {
             if (points[i].compareTo(points[i + 1]) == 0) {
                 return true;
@@ -47,6 +43,7 @@ public class BruteCollinearPoints {
         return false;
     }
 
+    // finds all line segments containing 4 points
     private void findSegments() {
         int n = points.length;
         for (int i = 0; i < n - 3; i++) {
