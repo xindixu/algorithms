@@ -5,8 +5,8 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Arrays;
 
 public class BruteCollinearPoints {
-    private Point[] points;
-    private LineSegment[] lineSegments;
+    private final Point[] points;
+    private final LineSegment[] lineSegments;
     private int count;
 
     public BruteCollinearPoints(Point[] points) {
@@ -19,22 +19,23 @@ public class BruteCollinearPoints {
                 throw new IllegalArgumentException();
             }
         }
-        Arrays.sort(points);
-        if (hasDuplicatedPoints(points)) {
+
+        this.points = Arrays.copyOf(points, points.length);
+        Arrays.sort(this.points);
+
+        if (hasDuplicatedPoints()) {
             throw new IllegalArgumentException();
         }
-
-        this.points = points;
-        this.lineSegments = new LineSegment[getMaxNumOfLineSegments(points)];
+        this.lineSegments = new LineSegment[getMaxNumOfLineSegments()];
         this.count = 0;
         findSegments();
     }
 
-    private int getMaxNumOfLineSegments(Point[] points) {
+    private int getMaxNumOfLineSegments() {
         return points.length;
     }
 
-    private boolean hasDuplicatedPoints(Point[] points) {
+    private boolean hasDuplicatedPoints() {
         for (int i = 0; i < points.length - 1; i++) {
             if (points[i].compareTo(points[i + 1]) == 0) {
                 return true;
@@ -73,25 +74,16 @@ public class BruteCollinearPoints {
     }
 
     public LineSegment[] segments() {
-        return lineSegments;
-    }
-
-    private void show(Point[] points) {
-        for (Point point : points) {
-            StdOut.print(point.toString() + " ");
-        }
-        StdOut.println();
+        return Arrays.copyOf(lineSegments, count);
     }
 
     public static void main(String[] args) {
         Point[] points = {new Point(2, 2), new Point(3, 3), new Point(-2, -1), new Point(4, 4), new Point(-1, -1)};
-        BruteCollinearPoints bcp = new BruteCollinearPoints(points);
-        StdOut.println(bcp.numberOfSegments());
-        LineSegment[] lineSegments = bcp.segments();
-        int count = bcp.numberOfSegments();
+        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
 
-        for (int i = 0; i < count; i++) {
-            StdOut.println(lineSegments[i].toString());
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
         }
     }
 

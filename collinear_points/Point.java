@@ -53,6 +53,9 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
+        if (that == null) {
+            throw new IllegalArgumentException();
+        }
         double denominator = that.x - x;
         double numerator = that.y - y;
 
