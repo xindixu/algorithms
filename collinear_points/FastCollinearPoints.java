@@ -4,13 +4,13 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
 public class FastCollinearPoints {
     private final Point[] points;
-    private final LineSegment[] lineSegments;
-    private int count;
+    private final ArrayList<LineSegment> lineSegmentArrayList;
 
     public FastCollinearPoints(Point[] points) {
         if (points == null) {
@@ -30,13 +30,8 @@ public class FastCollinearPoints {
             throw new IllegalArgumentException();
         }
 
-        this.lineSegments = new LineSegment[getMaxNumOfLineSegments()];
-        this.count = 0;
+        this.lineSegmentArrayList = new ArrayList<>();
         findSegments();
-    }
-
-    private int getMaxNumOfLineSegments() {
-        return points.length;
     }
 
     private boolean hasDuplicatedPoints() {
@@ -72,8 +67,7 @@ public class FastCollinearPoints {
                 // only add the line segment iff there are 3+ candidates and the first candidate is to the top/right
                 // of p
                 if (candidates.size() >= 3 && p.compareTo(candidates.peek()) < 0) {
-                    lineSegments[count] = new LineSegment(p, candidates.removeLast());
-                    count++;
+                    lineSegmentArrayList.add(new LineSegment(p, candidates.removeLast()));
                 }
             }
         }
@@ -81,11 +75,11 @@ public class FastCollinearPoints {
     }
 
     public int numberOfSegments() {
-        return count;
+        return lineSegmentArrayList.size();
     }
 
     public LineSegment[] segments() {
-        return Arrays.copyOf(lineSegments, count);
+        return lineSegmentArrayList.toArray(new LineSegment[0]);
     }
 
     public static void main(String[] args) {

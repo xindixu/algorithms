@@ -50,11 +50,11 @@ public class BruteCollinearPoints {
         for (int i = 0; i < n - 3; i++) {
             for (int j = i + 1; j < n - 2; j++) {
                 for (int k = j + 1; k < n - 1; k++) {
-                    for (int l = k + 1; l < n; l++) {
+                    for (int m = k + 1; m < n; m++) {
                         Point p = points[i];
                         Point q = points[j];
                         Point r = points[k];
-                        Point s = points[l];
+                        Point s = points[m];
 
                         if (p.slopeTo(q) == p.slopeTo(r) && p.slopeTo(r) == p.slopeTo(s)) {
                             Point[] allPoints = {p, q, r, s};

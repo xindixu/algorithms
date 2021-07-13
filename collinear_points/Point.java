@@ -54,7 +54,7 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
         if (that == null) {
-            throw new IllegalArgumentException();
+            throw new NullPointerException();
         }
         double denominator = that.x - x;
         double numerator = that.y - y;
@@ -108,6 +108,9 @@ public class Point implements Comparable<Point> {
 
     private class SlopeOrder implements Comparator<Point> {
         public int compare(Point a, Point b) {
+            if (a == null || b == null) {
+                throw new NullPointerException();
+            }
             double slopeToA = slopeTo(a);
             double slopeToB = slopeTo(b);
             if (slopeToA < slopeToB) {
@@ -136,14 +139,14 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        Point o = new Point(0, 0);
+        Point origin = new Point(0, 0);
         Point a = new Point(2, 4);
         Point b = new Point(5, 4);
-        StdOut.println(o.compareTo(b));
-        StdOut.println(o.slopeTo(a));
-        StdOut.println(o.slopeTo(b));
+        StdOut.println(origin.compareTo(b));
+        StdOut.println(origin.slopeTo(a));
+        StdOut.println(origin.slopeTo(b));
         Point[] array = {a, b};
-        Arrays.sort(array, o.slopeOrder());
+        Arrays.sort(array, origin.slopeOrder());
         for (Point p : array) {
             StdOut.println(p);
         }
