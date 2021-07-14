@@ -27,19 +27,16 @@ public class Quick {
                     break;
                 }
             }
-
             // find item in the right part to swap (anything <= pivot
             while (less(pivot, array[--j])) {
                 if (j == lo) {
                     break;
                 }
             }
-
             // pointer cross over
             if (i >= j) {
                 break;
             }
-
             exch(array, i, j);
         }
         // put pivot in the final sorted position
