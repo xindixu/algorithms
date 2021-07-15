@@ -9,28 +9,27 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class MaxPriorityQueue<Key> implements Iterable<Key> {
-
+public class MinPriorityQueue<Key> implements Iterable<Key> {
     private Key[] pq;
     private int count;
     private Comparator<Key> comparator;
 
-    public MaxPriorityQueue(int capacity) {
+    public MinPriorityQueue(int capacity) {
         this.pq = (Key[]) new Object[capacity + 1];
         this.count = 0;
     }
 
-    public MaxPriorityQueue() {
+    public MinPriorityQueue() {
         this(1);
     }
 
-    public MaxPriorityQueue(int capacity, Comparator comparator) {
+    public MinPriorityQueue(int capacity, Comparator comparator) {
         this.pq = (Key[]) new Object[capacity + 1];
         this.count = 0;
         this.comparator = comparator;
     }
 
-    public MaxPriorityQueue(Comparator comparator) {
+    public MinPriorityQueue(Comparator comparator) {
         this(1, comparator);
     }
 
@@ -46,43 +45,80 @@ public class MaxPriorityQueue<Key> implements Iterable<Key> {
         return count == 0;
     }
 
+
     /**
      * Add a new key to the priority queue.
      * Add it to the end and swim it up to restore heap invariant
      *
      * @param x new key to add
      */
-    private void insert(Key x) {
+    public void insert(Key x) {
         if (count + 1 == pq.length) {
             resize(pq.length * 2);
         }
-
         pq[++count] = x;
         swim(count);
-        assert isMaxHeap();
+        assert isMinHeap();
     }
 
     /**
-     * Remove the max key from the priority queue.
+     * Remove the min key from the priority queue.
      * Exchange the root with the last node and sink root down to restore heap invariant
      *
-     * @return the deleted max item in the priority queue
+     * @return the deleted min item in the priority queue
      */
-    private Key removeMax() {
+    public Key removeMin() {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        Key maxItem = pq[1];
+        Key minItem = pq[1];
         exch(1, count);
-        pq[count] = null;
         count--;
         sink(1);
 
         if (count + 1 > 0 && count + 1 == pq.length / 4) {
             resize(pq.length / 2);
         }
-        assert isMaxHeap();
-        return maxItem;
+        assert isMinHeap();
+        return minItem;
+    }
+
+    /***************************************************************************
+     * Helper functions to restore heap invariant
+     ***************************************************************************/
+
+    /**
+     * When a child's key becomes less than parent's key
+     *
+     * @param k index of the child
+     */
+    private void swim(int k) {
+        while (k > 1) {
+            if (!more(parent(k), k)) {
+                break;
+            }
+            exch(parent(k), k);
+            k = parent(k);
+        }
+    }
+
+    /**
+     * When a parent's key becomes more than one or both of its children's keys
+     *
+     * @param k index of the parent
+     */
+    private void sink(int k) {
+        while (leftChild(k) <= count) {
+            int smallerChild = leftChild(k);
+            if (rightChild(k) <= count && more(smallerChild, rightChild(k))) {
+                smallerChild = rightChild(k);
+            }
+            if (!more(k, smallerChild)) {
+                break;
+            }
+            exch(k, smallerChild);
+            k = smallerChild;
+        }
     }
 
 
@@ -103,56 +139,13 @@ public class MaxPriorityQueue<Key> implements Iterable<Key> {
     }
 
     /***************************************************************************
-     * Helper functions to restore heap invariant
-     ***************************************************************************/
-
-    /**
-     * When a child's key becomes larger than parent's key
-     *
-     * @param k index of the child
-     */
-    private void swim(int k) {
-        // break when k doesn't have parents
-        while (k > 1) {
-            // break when parent's key is not less than k's key
-            if (!less(parent(k), k)) {
-                break;
-            }
-            exch(parent(k), k);
-            k = parent(k);
-        }
-    }
-
-    /**
-     * When a parent's key becomes less than one or both of its children's keys
-     *
-     * @param k index of the parent
-     */
-    private void sink(int k) {
-        // break when k doesn't have children
-        while (leftChild(k) <= count) {
-            // find the largerChild
-            int largerChild = leftChild(k);
-            if (rightChild(k) <= count && less(largerChild, rightChild(k))) {
-                largerChild = rightChild(k);
-            }
-            // break when k's key is not less than larger child's key
-            if (!less(k, largerChild)) {
-                break;
-            }
-            exch(k, largerChild);
-            k = largerChild;
-        }
-    }
-
-    /***************************************************************************
      * Helper functions for compares and swaps.
      ***************************************************************************/
-    private boolean less(int i, int j) {
+    private boolean more(int i, int j) {
         if (comparator == null) {
-            return ((Comparable<Key>) pq[i]).compareTo(pq[j]) < 0;
+            return ((Comparable<Key>) pq[i]).compareTo(pq[j]) > 0;
         } else {
-            return comparator.compare(pq[i], pq[j]) < 0;
+            return comparator.compare(pq[i], pq[j]) > 0;
         }
     }
 
@@ -162,8 +155,8 @@ public class MaxPriorityQueue<Key> implements Iterable<Key> {
         pq[j] = swap;
     }
 
-    // is pq[1..n] a max heap?
-    private boolean isMaxHeap() {
+    // is pq[1..n] a min heap?
+    private boolean isMinHeap() {
         for (int i = 1; i <= count; i++) {
             if (pq[i] == null) return false;
         }
@@ -171,19 +164,18 @@ public class MaxPriorityQueue<Key> implements Iterable<Key> {
             if (pq[i] != null) return false;
         }
         if (pq[0] != null) return false;
-        return isMaxHeapOrdered(1);
+        return isMinHeapOrdered(1);
     }
 
     // is subtree of pq[1..n] rooted at k a max heap?
-    private boolean isMaxHeapOrdered(int k) {
+    private boolean isMinHeapOrdered(int k) {
         if (k > count) return true;
-        int left = leftChild(k);
-        int right = rightChild(k);
-        if (left <= count && less(k, left)) return false;
-        if (right <= count && less(k, right)) return false;
-        return isMaxHeapOrdered(left) && isMaxHeapOrdered(right);
+        int left = 2 * k;
+        int right = 2 * k + 1;
+        if (left <= count && more(k, left)) return false;
+        if (right <= count && more(k, right)) return false;
+        return isMinHeapOrdered(left) && isMinHeapOrdered(right);
     }
-
 
     /***************************************************************************
      * Iterator.
@@ -201,10 +193,10 @@ public class MaxPriorityQueue<Key> implements Iterable<Key> {
     }
 
     private class HeapIterator implements Iterator<Key> {
-        private final MaxPriorityQueue<Key> copy;
+        private final MinPriorityQueue<Key> copy;
 
         public HeapIterator() {
-            copy = comparator == null ? new MaxPriorityQueue<>(size()) : new MaxPriorityQueue<>(size(), comparator);
+            copy = comparator == null ? new MinPriorityQueue<>(size()) : new MinPriorityQueue<>(size(), comparator);
             for (int i = 1; i <= count; i++) {
                 copy.insert(pq[i++]);
             }
@@ -220,7 +212,7 @@ public class MaxPriorityQueue<Key> implements Iterable<Key> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            return copy.removeMax();
+            return copy.removeMin();
         }
     }
 
@@ -230,11 +222,11 @@ public class MaxPriorityQueue<Key> implements Iterable<Key> {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        MaxPriorityQueue<String> pq = new MaxPriorityQueue<>();
+        MinPriorityQueue<String> pq = new MinPriorityQueue<>();
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
             if (!item.equals("-")) pq.insert(item);
-            else if (!pq.isEmpty()) StdOut.print(pq.removeMax() + " ");
+            else if (!pq.isEmpty()) StdOut.print(pq.removeMin() + " ");
         }
         StdOut.println("(" + pq.size() + " left on pq)");
 
