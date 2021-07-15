@@ -5,6 +5,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Comparator;
 
+@SuppressWarnings("rawtypes")
 public class Shell {
     // This class should not be instantiated.
     private Shell() {
