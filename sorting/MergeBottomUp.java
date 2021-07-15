@@ -65,7 +65,6 @@ public class MergeBottomUp {
         return v.compareTo(w) < 0;
     }
 
-
     /***************************************************************************
      *  Check if array is sorted - useful for debugging.
      ***************************************************************************/
