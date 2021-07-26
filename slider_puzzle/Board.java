@@ -10,9 +10,6 @@ public class Board {
     private final int[][] tiles;
     private final int n;
 
-    // create a board from an n-by-n array of tiles,
-    // where tiles[row][col] = tile at (row, col)
-
     /**
      * Copy the tiles into private tiles
      *
@@ -120,18 +117,29 @@ public class Board {
         return true;
     }
 
-    public boolean equals(Board y) {
-        if (n != y.dimension()) {
+    public boolean equals(Object other) {
+        if (other == this) return true;
+        if (other == null) return false;
+        if (other.getClass() != this.getClass()) return false;
+        Board that = (Board) other;
+        if (n != that.dimension()) {
             return false;
         }
 
-        return toString().equals(y.toString());
-    }
-
-    private int[] positionOfEmpty(int[][] tiles) {
         for (int r = 0; r < n; r++) {
             for (int c = 0; c < n; c++) {
-                if (tiles[r][c] == 0) {
+                if (tiles[r][c] != that.tiles[r][c]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private int[] positionOfEmpty(int[][] array) {
+        for (int r = 0; r < n; r++) {
+            for (int c = 0; c < n; c++) {
+                if (array[r][c] == 0) {
                     return new int[]{r, c};
                 }
             }
@@ -183,12 +191,10 @@ public class Board {
 
         int[] position = positionOfEmpty(twinTile);
         int col = position[1] == 0 ? 1 : 0;
+        int row = 0;
+        int newRow = 1;
 
-        if (position[0] == 0) {
-            exch(twinTile, 1, col, 2, col);
-        } else {
-            exch(twinTile, 1, col, 0, col);
-        }
+        exch(twinTile, row, col, newRow, col);
 
         return new Board(twinTile);
     }
@@ -212,8 +218,5 @@ public class Board {
             StdOut.println(b.toString());
         }
         StdOut.println(initial.toString());
-
     }
-
-
 }
