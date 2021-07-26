@@ -128,7 +128,7 @@ public class Board {
         return toString().equals(y.toString());
     }
 
-    private int[] positionOfEmpty() {
+    private int[] positionOfEmpty(int[][] tiles) {
         for (int r = 0; r < n; r++) {
             for (int c = 0; c < n; c++) {
                 if (tiles[r][c] == 0) {
@@ -156,7 +156,7 @@ public class Board {
     // all neighboring boards
     public Iterable<Board> neighbors() {
         ArrayList<Board> boards = new ArrayList<>();
-        int[] position = positionOfEmpty();
+        int[] position = positionOfEmpty(tiles);
         int row = position[0];
         int col = position[1];
 
@@ -176,8 +176,22 @@ public class Board {
     }
 
     // a board that is obtained by exchanging any pair of tiles
-    // public Board twin() {
-    // }
+    public Board twin() {
+        int[][] twinTile = new int[n][];
+        for (int i = 0; i < n; i++)
+            twinTile[i] = tiles[i].clone();
+
+        int[] position = positionOfEmpty(twinTile);
+        int col = position[1] == 0 ? 1 : 0;
+
+        if (position[0] == 0) {
+            exch(twinTile, 1, col, 2, col);
+        } else {
+            exch(twinTile, 1, col, 0, col);
+        }
+
+        return new Board(twinTile);
+    }
 
     // unit testing (not graded)
     public static void main(String[] args) {
@@ -199,18 +213,6 @@ public class Board {
         }
         StdOut.println(initial.toString());
 
-
-        // // solve the puzzle
-        // Solver solver = new Solver(initial);
-        //
-        // // print solution to standard output
-        // if (!solver.isSolvable())
-        //     StdOut.println("No solution possible");
-        // else {
-        //     StdOut.println("Minimum number of moves = " + solver.moves());
-        //     for (Board board : solver.solution())
-        //         StdOut.println(board);
-        // }
     }
 
 
