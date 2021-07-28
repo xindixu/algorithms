@@ -120,6 +120,85 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
 
     /**
+     * Returns the largest key in the symbol table less than or equal to {@code key}.
+     *
+     * @param key the key
+     * @return the largest key in the symbol table less than or equal to {@code key}
+     * @throws NoSuchElementException   if there is no such key
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public Key floor(Key key) {
+        if (key == null) throw new IllegalArgumentException();
+        Key x = floor(key, root, null);
+        if (x == null) throw new NoSuchElementException();
+        return x;
+    }
+
+    private Key floor(Key key, Node cur, Key best) {
+        if (cur == null) return best;
+        int cmp = key.compareTo(cur.key);
+        // key < cur.key -> cur key is too big, go to left to find something smaller and keep cur best
+        if (cmp < 0) return floor(key, cur.left, best);
+        // key > cur.key -> cur key is small enough, go to right for potentially bigger keys and update cur best
+        if (cmp > 0) return floor(key, cur.right, cur.key);
+        return cur.key;
+    }
+
+
+    /**
+     * Returns the smallest key in the symbol table greater than or equal to {@code key}.
+     *
+     * @param key the key
+     * @return the smallest key in the symbol table greater than or equal to {@code key}
+     * @throws NoSuchElementException   if there is no such key
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public Key ceiling(Key key) {
+        if (key == null) throw new IllegalArgumentException();
+        Key x = ceiling(key, root, null);
+        if (x == null) throw new NoSuchElementException();
+        return x;
+    }
+
+    private Key ceiling(Key key, Node cur, Key best) {
+        if (cur == null) return best;
+        int cmp = key.compareTo(cur.key);
+        // key < cur.key -> cur key is big enough, go to left for potentially smaller keys and update cur best
+        if (cmp < 0) return ceiling(key, cur.left, cur.key);
+        // key > cur.key -> cur key is too small, go to right to find something bigger and keep cur best
+        if (cmp > 0) return ceiling(key, cur.right, best);
+        return cur.key;
+    }
+
+    /**
+     * Return the key in the symbol table of a given {@code rank}.
+     * This key has the property that there are {@code rank} keys in
+     * the symbol table that are smaller. In other words, this key is the
+     * ({@code rank}+1)st smallest key in the symbol table.
+     *
+     * @param rank the order statistic
+     * @return the key in the symbol table of given {@code rank}
+     * @throws IllegalArgumentException unless {@code rank} is between 0 and
+     *                                  <em>n</em>–1
+     */
+    public Key select(int rank) {
+        if (rank < 0 || rank >= size()) throw new IllegalArgumentException();
+        return select(root, rank);
+    }
+
+    private Key select(Node cur, int rank) {
+        if (cur == null) return null;
+        // rank of cur item is the size of left subtree
+        int rankOfCur = size(cur.left);
+        // rankOfCur is too small, go to right subtree and rank for that should exclude current rank and the current
+        // node
+        if (rankOfCur < rank) return select(cur.right, rank - rankOfCur - 1);
+        // rankOfCur is too big, go to left subtree and keep the rank
+        if (rankOfCur > rank) return select(cur.left, rank);
+        return cur.key;
+    }
+
+    /**
      * Returns all keys in the symbol table as an {@code Iterable}.
      * To iterate over all of the keys in the symbol table named {@code st},
      * use the foreach notation: {@code for (Key key : st.keys())}.
@@ -165,6 +244,62 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         if (cmpHi > 0) keys(cur.right, queue, lo, hi);
     }
 
+    /**
+     * Return the number of keys in the symbol table strictly less than {@code key}.
+     *
+     * @param key the key
+     * @return the number of keys in the symbol table strictly less than {@code key}
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public int rank(Key key) {
+        if (key == null) throw new IllegalArgumentException();
+        return rank(root, key);
+    }
+
+    private int rank(Node cur, Key key) {
+        if (cur == null) return 0;
+        int cmp = key.compareTo(cur.key);
+
+        // key < cur.key -> go to left subtree to find that node and its rank
+        if (cmp < 0) return rank(cur.left, key);
+        // key > cur.key -> go to right subtree to find that node and its rank
+        // also need to add the cur node (1) and the size of left subtree
+        if (cmp > 0) return size(cur.left) + rank(cur.right, key) + 1;
+        // key == cur.key -> rank = size of left subtree
+        return size(cur.left);
+    }
+
+    /**
+     * Returns the number of keys in the symbol table in the given range.
+     *
+     * @param lo minimum endpoint
+     * @param hi maximum endpoint
+     * @return the number of keys in the symbol table between {@code lo}
+     * (inclusive) and {@code hi} (inclusive)
+     * @throws IllegalArgumentException if either {@code lo} or {@code hi}
+     *                                  is {@code null}
+     */
+    public int size(Key lo, Key hi) {
+        if (lo == null || hi == null) throw new IllegalArgumentException();
+        int cmp = lo.compareTo(hi);
+        if (cmp > 0) return 0;
+        if (contains(hi)) return rank(hi) - rank(lo) + 1;
+        return rank(hi) - rank(lo);
+    }
+
+    /**
+     * Returns the height of the BST (for debugging).
+     *
+     * @return the height of the BST (a 1-node tree has height 0)
+     */
+    public int height() {
+        return height(root);
+    }
+
+    private int height(Node cur) {
+        if (root == null) return -1;
+        return 1 + Math.max(height(cur.left), height(cur.right));
+    }
 
     /**
      * Returns the keys in the BST in level order (for debugging).
