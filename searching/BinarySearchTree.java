@@ -39,9 +39,38 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         return cur.size;
     }
 
+    /**
+     * Does this symbol table contain the given key?
+     *
+     * @param key the key
+     * @return {@code true} if this symbol table contains {@code key} and
+     * {@code false} otherwise
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
     public boolean contains(Key key) {
         if (key == null) throw new IllegalArgumentException();
         return get(key) != null;
+    }
+
+    /**
+     * Returns the value associated with the given key.
+     *
+     * @param key the key
+     * @return the value associated with the given key if the key is in the symbol table
+     * and {@code null} if the key is not in the symbol table
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public Value get(Key key) {
+        if (key == null) throw new IllegalArgumentException();
+        return get(root, key);
+    }
+
+    private Value get(Node cur, Key key) {
+        if (cur == null) return null;
+        int cmp = key.compareTo(cur.key);
+        if (cmp < 0) return get(cur.left, key);
+        if (cmp > 0) return get(cur.right, key);
+        return cur.value;
     }
 
     /**
@@ -67,19 +96,6 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         else cur.value = value;
         cur.size = 1 + size(cur.left) + size(cur.right);
         return cur;
-    }
-
-    public Value get(Key key) {
-        if (key == null) throw new IllegalArgumentException();
-        return get(root, key);
-    }
-
-    private Value get(Node cur, Key key) {
-        if (cur == null) return null;
-        int cmp = key.compareTo(cur.key);
-        if (cmp < 0) return get(cur.left, key);
-        if (cmp > 0) return get(cur.right, key);
-        return cur.value;
     }
 
     /***************************************************************************
