@@ -76,10 +76,52 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
     /***************************************************************************
+     *  Red-black tree insertion.
+     ***************************************************************************/
+
+    /**
+     * Inserts the specified key-value pair into the symbol table, overwriting the old
+     * value with the new value if the symbol table already contains the specified key.
+     * Deletes the specified key (and its associated value) from this symbol table
+     * if the specified value is {@code null}.
+     *
+     * @param key   the key
+     * @param value the value
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public void put(Key key, Value value) {
+        if (key == null) throw new IllegalArgumentException("first argument to put() is null");
+        if (value == null) {
+            delete(key);
+            return;
+        }
+        root = put(root, key, value);
+        root.color = BLACK;
+    }
+
+    private Node put(Node cur, Key key, Value value) {
+        if (cur == null) return new Node(key, value, RED, 1);
+
+        int cmp = key.compareTo(cur.key);
+        if (cmp < 0) cur.left = put(cur.left, key, value);
+        else if (cmp > 0) cur.right = put(cur.right, key, value);
+        else cur.value = value;
+
+        // fix invalid colors
+        if (isRed(cur.right) && !isRed(cur.left)) cur = rotateLeft(cur);
+        if (isRed(cur.left) && isRed(cur.left.left)) cur = rotateRight(cur);
+        if (isRed(cur.left) && isRed(cur.right)) flipColors(cur);
+
+        cur.size = size(cur.left) + size(cur.right) + 1;
+        return cur;
+    }
+
+    /***************************************************************************
      *  Red-black tree helper functions.
      ***************************************************************************/
 
     // orient a left-leaning red link to (temporarily) lean right
+    // the larger node here is also the parent node
     private Node rotateRight(Node larger) {
         assert larger != null && isRed(larger.left);
 
@@ -106,6 +148,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     }
 
     // orient a (temporarily) right-leaning red link to lean left
+    // the smaller node here is also the parent node
     private Node rotateLeft(Node smaller) {
         assert smaller != null && isRed(smaller.right);
 
