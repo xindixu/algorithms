@@ -108,7 +108,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
     public void put(Key key, Value value) {
         if (key == null) throw new IllegalArgumentException("first argument to put() is null");
         if (value == null) {
-            delete(key);
+            // delete(key);
             return;
         }
         root = put(root, key, value);
@@ -343,7 +343,6 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         else return rank(hi) - rank(lo);
     }
 
-
     /***************************************************************************
      *  Red-black tree helper functions.
      ***************************************************************************/
@@ -409,6 +408,45 @@ public class RedBlackBST<Key extends Comparable<Key>, Value> {
         parent.left.color = !parent.left.color;
         parent.right.color = !parent.right.color;
         parent.color = !parent.color;
+    }
+
+
+    /***************************************************************************
+     *  Debugging
+     ***************************************************************************/
+
+    /**
+     * Returns the height of the BST (for debugging).
+     *
+     * @return the height of the BST (a 1-node tree has height 0)
+     */
+    public int height() {
+        return height(root);
+    }
+
+    private int height(Node cur) {
+        if (root == null) return -1;
+        return 1 + Math.max(height(cur.left), height(cur.right));
+    }
+
+    /**
+     * Returns the keys in the BST in level order (for debugging).
+     *
+     * @return the keys in the BST in level order traversal
+     */
+    public Iterable<Key> levelOrder() {
+        Queue<Key> results = new Queue<>();
+        Queue<Node> queue = new Queue<>();
+        queue.enqueue(root);
+
+        while (!queue.isEmpty()) {
+            Node cur = queue.dequeue();
+            if (cur == null) continue;
+            results.enqueue(cur.key);
+            queue.enqueue(cur.left);
+            queue.enqueue(cur.right);
+        }
+        return results;
     }
 
     /**

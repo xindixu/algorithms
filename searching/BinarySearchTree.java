@@ -386,7 +386,6 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
      *  Debugging
      ***************************************************************************/
 
-
     /**
      * Returns the height of the BST (for debugging).
      *
