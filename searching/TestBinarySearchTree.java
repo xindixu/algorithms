@@ -52,46 +52,46 @@ public class TestBinarySearchTree {
         }
         StdOut.println();
 
-        // // test range search and range count
-        // String[] from = {"A", "Z", "X", "0", "B", "C"};
-        // String[] to = {"Z", "A", "X", "Z", "G", "L"};
-        // StdOut.println("range search");
-        // StdOut.println("-------------------");
-        // for (int i = 0; i < from.length; i++) {
-        //     StdOut.printf("%s-%s (%2d) : ", from[i], to[i], st.size(from[i], to[i]));
-        //     for (String s : st.keys(from[i], to[i]))
-        //         StdOut.print(s + " ");
-        //     StdOut.println();
-        // }
-        // StdOut.println();
-        //
-        // // delete the smallest keys
-        // for (int i = 0; i < st.size() / 2; i++) {
-        //     st.deleteMin();
-        // }
-        // StdOut.println("After deleting the smallest " + st.size() / 2 + " keys");
-        // StdOut.println("--------------------------------");
-        // for (String s : st.keys())
-        //     StdOut.println(s + " " + st.get(s));
-        // StdOut.println();
-        //
-        // // delete all the remaining keys
-        // while (!st.isEmpty()) {
-        //     st.delete(st.select(st.size() / 2));
-        // }
-        // StdOut.println("After deleting the remaining keys");
-        // StdOut.println("--------------------------------");
-        // for (String s : st.keys())
-        //     StdOut.println(s + " " + st.get(s));
-        // StdOut.println();
-        //
-        // StdOut.println("After adding back the keys");
-        // StdOut.println("--------------------------------");
-        // for (int i = 0; i < n; i++)
-        //     st.put(keys[i], i);
-        // for (String s : st.keys())
-        //     StdOut.println(s + " " + st.get(s));
-        // StdOut.println();
+        // test range search and range count
+        String[] from = {"A", "Z", "X", "0", "B", "C"};
+        String[] to = {"Z", "A", "X", "Z", "G", "L"};
+        StdOut.println("range search");
+        StdOut.println("-------------------");
+        for (int i = 0; i < from.length; i++) {
+            StdOut.printf("%s-%s (%2d) : ", from[i], to[i], st.size(from[i], to[i]));
+            for (String s : st.keys(from[i], to[i]))
+                StdOut.print(s + " ");
+            StdOut.println();
+        }
+        StdOut.println();
+
+        // delete the smallest keys
+        for (int i = 0; i < st.size() / 2; i++) {
+            st.deleteMin();
+        }
+        StdOut.println("After deleting the smallest " + st.size() / 2 + " keys");
+        StdOut.println("--------------------------------");
+        for (String s : st.keys())
+            StdOut.println(s + " " + st.get(s));
+        StdOut.println();
+
+        // delete all the remaining keys
+        while (!st.isEmpty()) {
+            st.delete(st.select(st.size() / 2));
+        }
+        StdOut.println("After deleting the remaining keys");
+        StdOut.println("--------------------------------");
+        for (String s : st.keys())
+            StdOut.println(s + " " + st.get(s));
+        StdOut.println();
+
+        StdOut.println("After adding back the keys");
+        StdOut.println("--------------------------------");
+        for (int i = 0; i < n; i++)
+            st.put(keys[i], i);
+        for (String s : st.keys())
+            StdOut.println(s + " " + st.get(s));
+        StdOut.println();
 
     }
 }

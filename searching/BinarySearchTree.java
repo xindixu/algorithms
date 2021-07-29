@@ -287,6 +287,90 @@ public class BinarySearchTree<Key extends Comparable<Key>, Value> {
         return rank(hi) - rank(lo);
     }
 
+    /***************************************************************************
+     *  Deletions
+     ***************************************************************************/
+
+    /**
+     * Removes the smallest key and associated value from the symbol table.
+     *
+     * @throws NoSuchElementException if the symbol table is empty
+     */
+    public void deleteMin() {
+        if (isEmpty()) throw new NoSuchElementException();
+        root = deleteMin(root);
+    }
+
+    private Node deleteMin(Node cur) {
+        if (cur.left == null) return cur.right;
+        cur.left = deleteMin(cur.left);
+        cur.size = size(cur.left) + size(cur.right) + 1;
+        return cur;
+    }
+
+    /**
+     * Removes the largest key and associated value from the symbol table.
+     *
+     * @throws NoSuchElementException if the symbol table is empty
+     */
+    public void deleteMax() {
+        if (isEmpty()) throw new NoSuchElementException();
+        root = deleteMax(root);
+    }
+
+    private Node deleteMax(Node cur) {
+        if (cur.right == null) return cur.left;
+        cur.right = deleteMax(cur.right);
+        cur.size = size(cur.left) + size(cur.right) + 1;
+        return cur;
+    }
+
+    /**
+     * Removes the specified key and its associated value from this symbol table
+     * (if the key is in this symbol table).
+     *
+     * @param key the key
+     * @throws IllegalArgumentException if {@code key} is {@code null}
+     */
+    public void delete(Key key) {
+        if (key == null) throw new IllegalArgumentException();
+        root = delete(key, root);
+    }
+
+    private Node delete(Key key, Node cur) {
+        if (cur == null) return null;
+
+        int cmp = key.compareTo(cur.key);
+        // cur key > key -> go to left subtree to find the matching key
+        if (cmp < 0) cur.left = delete(key, cur.left);
+            // cur key < key -> go to right subtree to find the matching key
+        else if (cmp > 0) cur.right = delete(key, cur.right);
+            // found the matching key
+        else {
+            // cases where cur has at most one child
+            if (cur.right == null) return cur.left;
+            if (cur.left == null) return cur.right;
+
+            // save cur node reference
+            Node temp = cur;
+            // find the successor (go right and continue going left to find a node without left child)
+            cur = min(temp.right);
+            // remove successor from right subtree
+            cur.right = deleteMin(temp.right);
+            // link left subtree with successor
+            cur.left = temp.left;
+        }
+
+        cur.size = size(cur.left) + size(cur.right) + 1;
+        return cur;
+    }
+
+
+    /***************************************************************************
+     *  Debugging
+     ***************************************************************************/
+
+
     /**
      * Returns the height of the BST (for debugging).
      *
