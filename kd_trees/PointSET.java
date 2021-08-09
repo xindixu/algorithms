@@ -115,7 +115,5 @@ public class PointSET {
 
 
         StdDraw.show();
-
     }
-
 }
