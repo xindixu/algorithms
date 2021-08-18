@@ -2,8 +2,9 @@ package kd_trees;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
 
 public class KdTree {
     private static final int CANVAS_SIZE = 1;
@@ -66,6 +67,7 @@ public class KdTree {
 
     /**
      * Does the tree contains this point p
+     *
      * @param p the point to test
      * @return does the set contain point p
      */
@@ -77,7 +79,6 @@ public class KdTree {
     private boolean contains(Node cur, Point2D p) {
         if (cur == null) return false;
 
-        StdOut.println(cur.value.toString());
         if (cur.useX) {
             if (cur.key < p.x()) return contains(cur.right, p);
             if (cur.key > p.x()) return contains(cur.left, p);
@@ -104,8 +105,8 @@ public class KdTree {
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(POINT_SIZE);
         StdDraw.point(point.x(), point.y());
-        StdDraw.text(point.x(), point.y() - 0.01, point.x() + ", " + point.y());
-        StdDraw.text(point.x(), point.y() + 0.01, level + "");
+        // StdDraw.text(point.x(), point.y() - 0.01, point.x() + ", " + point.y());
+        // StdDraw.text(point.x(), point.y() + 0.01, level + "");
 
         // draw the line
         StdDraw.setPenRadius();
@@ -123,23 +124,172 @@ public class KdTree {
             draw(cur.right, xMin, xMax, cur.key, yMax, level + 1);
         }
     }
-    
+
+    public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) throw new IllegalArgumentException();
+
+        Queue<Point2D> result = new Queue<>();
+
+        range(rect, root, result);
+        return result;
+    }
+
+    private void range(RectHV rect, Node cur, Queue<Point2D> result) {
+        if (cur == null) return;
+
+        Point2D curPoint = cur.value;
+
+        if (cur.useX) {
+            if (cur.key < rect.xmin()) {
+                // cur point is to the left of the rect
+                range(rect, cur.right, result);
+            } else if (cur.key > rect.xmax()) {
+                // cur point is to the right of the rect
+                range(rect, cur.left, result);
+            } else {
+                // cur point is in between left and right edges of the rect
+
+                // check and add cur point
+                if (rect.contains(curPoint)) result.enqueue(curPoint);
+
+                // check both children
+                range(rect, cur.right, result);
+                range(rect, cur.left, result);
+
+            }
+        } else {
+            if (cur.key < rect.ymin()) {
+                // cur point is to the bottom of the rect
+                range(rect, cur.right, result);
+            } else if (cur.key > rect.ymax()) {
+                //  cur point is to the top of the rect
+                range(rect, cur.left, result);
+            } else {
+                // cur point is in between top and bottom edges of the rect
+
+                // check and add cur point
+                if (rect.contains(curPoint)) result.enqueue(curPoint);
+
+                // check both children
+                range(rect, cur.right, result);
+                range(rect, cur.left, result);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
-        // read the n points from a file
-        In in = new In(args[0]);
-        int n = in.readInt();
-        KdTree kdTree = new KdTree();
-        for (int i = 0; i < n; i++) {
+
+        // initialize the data structures from file
+        String filename = args[0];
+        In in = new In(filename);
+        PointSET brute = new PointSET();
+        KdTree kdtree = new KdTree();
+        while (!in.isEmpty()) {
             double x = in.readDouble();
             double y = in.readDouble();
-            kdTree.insert(new Point2D(x, y));
+            Point2D p = new Point2D(x, y);
+            kdtree.insert(p);
+            brute.insert(p);
         }
 
-        kdTree.draw();
+        double x0 = 0.0, y0 = 0.0;      // initial endpoint of rectangle
+        double x1 = 0.0, y1 = 0.0;      // current location of mouse
+        boolean isDragging = false;     // is the user dragging a rectangle
 
-        // does the tree contains these points
-        StdOut.println(kdTree.contains(new Point2D(0.09, 0.34)));
-        StdOut.println(kdTree.contains(new Point2D(0.09, 0.32)));
+        // draw the points
+        StdDraw.clear();
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
+        brute.draw();
+        kdtree.draw();
+
+        StdDraw.show();
+
+        // process range search queries
+        StdDraw.enableDoubleBuffering();
+        while (true) {
+
+            // user starts to drag a rectangle
+            if (StdDraw.isMousePressed() && !isDragging) {
+                x0 = x1 = StdDraw.mouseX();
+                y0 = y1 = StdDraw.mouseY();
+                isDragging = true;
+            }
+
+            // user is dragging a rectangle
+            else if (StdDraw.isMousePressed() && isDragging) {
+                x1 = StdDraw.mouseX();
+                y1 = StdDraw.mouseY();
+            }
+
+            // user stops dragging rectangle
+            else if (!StdDraw.isMousePressed() && isDragging) {
+                isDragging = false;
+            }
+
+            // draw the points
+            StdDraw.clear();
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.setPenRadius(0.01);
+            brute.draw();
+            kdtree.draw();
+
+            // draw the rectangle
+            RectHV rect = new RectHV(Math.min(x0, x1), Math.min(y0, y1), Math.max(x0, x1), Math.max(y0, y1));
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.setPenRadius();
+            rect.draw();
+
+            // draw the range search results for brute-force data structure in red
+            StdDraw.setPenRadius(0.02);
+            StdDraw.setPenColor(StdDraw.RED);
+            for (Point2D p : brute.range(rect))
+                p.draw();
+
+            // draw the range search results for kd-tree in blue
+            StdDraw.setPenRadius(0.01);
+            StdDraw.setPenColor(StdDraw.BLUE);
+            for (Point2D p : kdtree.range(rect))
+                p.draw();
+
+            StdDraw.show();
+            StdDraw.pause(20);
+        }
     }
+
+
+    // public static void main(String[] args) {
+    //     // read the n points from a file
+    //     In in = new In(args[0]);
+    //     int n = in.readInt();
+    //     KdTree kdTree = new KdTree();
+    //     for (int i = 0; i < n; i++) {
+    //         double x = in.readDouble();
+    //         double y = in.readDouble();
+    //         kdTree.insert(new Point2D(x, y));
+    //     }
+    //
+    //     kdTree.draw();
+    //
+    //     // does the tree contains these points
+    //     StdOut.println(kdTree.contains(new Point2D(0.09, 0.34)));
+    //     StdOut.println(kdTree.contains(new Point2D(0.09, 0.32)));
+    //
+    //     // create a rectangle
+    //     RectHV rectangle = new RectHV(0.1, 0.1, 0.3, 0.5);
+    //     StdDraw.setPenRadius(POINT_SIZE / 2);
+    //     StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
+    //     rectangle.draw();
+    //
+    //     // find range
+    //     StdDraw.setPenColor(StdDraw.BOOK_BLUE);
+    //     StdDraw.setPenRadius(POINT_SIZE);
+    //
+    //     Iterable<Point2D> pointsInRange = kdTree.range(rectangle);
+    //     for (Point2D pointInRange : pointsInRange) {
+    //         StdOut.println(pointInRange.x() + " " + pointInRange.y());
+    //         pointInRange.draw();
+    //     }
+    // }
 }
